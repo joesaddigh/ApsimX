@@ -59,8 +59,8 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction appearanceRate3 = null;
 
-		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction leafNoAtEmergence = null;
+		//[Link(Type = LinkType.Child, ByName = true)]
+		//private IFunction leafNoAtEmergence = null;
 
 		/// <summary> Set through Sowing Event</summary>
 		[JsonIgnore]
@@ -134,9 +134,9 @@ namespace Models.PMF.Struct
 		/// </summary>
 		public void Initialize()
 		{
-			Culms.Clear();
-			Culms.Add(new Culm(0));
-			Culms[0].CurrentLeafNo = leafNoAtEmergence.Value();
+            // Initialise Main Stem
+            Culms.Clear();
+            InitiateTiller(0, 1, 1);
 
 			TTTargetFI = 0;
 			FinalLeafNo = 0;
@@ -145,8 +145,23 @@ namespace Models.PMF.Struct
 			dltStressedLAI = 0.0;
         }
 
-		/// <summary> Reset Culms at start of the simulation </summary>
-		[EventSubscribe("StartOfSimulation")]
+        private void InitiateTiller(int tillerNumber, double fractionToAdd, double initialLeaf)
+        {
+            //var newCulm = new Culm(tillerNumber);
+            //newCulm->setCanopyParams(leafAreaParams, finalLeafNo);
+            //newCulm->setCurrentLeafNo(initialLeaf);
+            //newCulm->setProportion(fractionToAdd);
+            //Culms.Add(newCulm);
+
+            Culms.Add(new Culm(tillerNumber)
+            {
+                CurrentLeafNo = initialLeaf,
+				Proportion = fractionToAdd
+            });
+        }
+
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
 		private void StartOfSim(object sender, EventArgs e)
 		{
 			Initialize();

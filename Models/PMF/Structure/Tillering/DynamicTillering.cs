@@ -144,7 +144,7 @@ namespace Models.PMF.Struct
 				CalculatedTillerNumber = calcTillerNumber(newLeafNo, existingLeafNo);
 				AddInitialTillers();
 			}
-			var fractionToAdd = calcTillerAppearance(newLeafNo, existingLeafNo);
+			var fractionToAdd = calcTillerAppearance();
 			AddTillerProportion(fractionToAdd);
 
 
@@ -209,7 +209,7 @@ namespace Models.PMF.Struct
 			}
 
 		}
-		double calcTillerAppearance(int newLeafNo, int currentLeafNo)
+		double calcTillerAppearance()
 		{
 			//if there are still more tillers to add
 			//and the newleaf is greater than 3
@@ -233,10 +233,7 @@ namespace Models.PMF.Struct
 		/// </summary>
 		void InitiateTiller(int tillerNumber, double fractionToAdd, double initialLeaf)
         {
-			double leafNoAtAppearance = 1.0;                            // DEBUG  parameter?
-			double nTillersPresent = culms.Culms.Count - 1;
-
-			Culm newCulm = new Culm(leafNoAtAppearance);
+			Culm newCulm = new Culm(tillerNumber);
 
 			newCulm.CulmNo = tillerNumber;
 			newCulm.CurrentLeafNo = initialLeaf;
