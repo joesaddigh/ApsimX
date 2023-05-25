@@ -197,7 +197,8 @@ namespace Models.PMF.Struct
 			//a new tiller is created with each new leaf, up the number of fertileTillers
 			if (tillerFraction + fractionToAdd > 1)
 			{
-				Culm newCulm = new Culm(leafAtAppearance);
+				// TODO - Joe S - Don't Commit This!
+				Culm newCulm = new Culm((int)leafAtAppearance);
 
 				//bell curve distribution is adjusted horizontally by moving the curve to the left.
 				//This will cause the first leaf to have the same value as the nth leaf on the main culm.

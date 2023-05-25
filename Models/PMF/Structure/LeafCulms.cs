@@ -112,12 +112,6 @@ namespace Models.PMF.Struct
         [JsonIgnore]
 		public double TTTargetFI { get; private set; }
 
-		/// <summary> Constructor. </summary>
-		public LeafCulms()
-		{
-			Culms = new List<Culm>();
-		}
-
         /// <summary> Array of Individual leaf sizeson the first culm</summary>
         [JsonIgnore]
         public double[] LeafSizes
@@ -128,19 +122,25 @@ namespace Models.PMF.Struct
 			}
 		}
 
-		/// <summary>
-		/// Remove all then add the first culm (which is the main culm).
-		/// Shouldn't be called once sown.
-		/// </summary>
-		public void Initialize()
+        /// <summary>Constructor.</summary>
+        public LeafCulms()
+        {
+            Culms = new List<Culm>();
+        }
+
+        /// <summary>
+        /// Remove all then add the first culm (which is the main culm).
+        /// Shouldn't be called once sown.
+        /// </summary>
+        public void Initialize()
 		{
             // Initialise Main Stem
             Culms.Clear();
             InitiateTiller(0, 1, 1);
 
-			TTTargetFI = 0;
-			FinalLeafNo = 0;
-			dltLeafNo = 0;
+            FinalLeafNo = 0.0;
+            dltLeafNo = 0.0;
+            TTTargetFI = 0.0;
 			dltPotentialLAI = 0.0;
 			dltStressedLAI = 0.0;
         }

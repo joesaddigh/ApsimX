@@ -94,7 +94,8 @@ namespace Models.PMF.Struct
 
 		private int flagStage;
 		private int floweringStage;
-		private int endJuvenilePhase;
+		private int emergenceStage;
+        private int endJuvenilePhase;
 		//private double tillersAdded;
 		private int startThermalQuotientLeafNo = 3;
 		private int endThermalQuotientLeafNo = 5;
@@ -114,6 +115,13 @@ namespace Models.PMF.Struct
 			if (floweringStage < 1) floweringStage = phenology.EndStagePhaseIndex("Flowering");
 			return phenology.BeforePhase(floweringStage);
 		}
+
+		private bool AfterEmergence()
+		{
+			if (emergenceStage < 1) emergenceStage = phenology.EndStagePhaseIndex("Emergence");
+			return phenology.BeyondPhase(emergenceStage);
+		}
+
 		private bool beforeEndJuvenileStage()
 		{
 			if (endJuvenilePhase < 1) endJuvenilePhase = phenology.StartStagePhaseIndex("EndJuvenile");
@@ -157,12 +165,17 @@ namespace Models.PMF.Struct
 
 		private double calcLeafAppearance(Culm culm)
 		{
-			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
-			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
-			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
-			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
+			var dltLeafNo = 0.0;
+            var remainingLeaves = culms.FinalLeafNo - culm.CurrentLeafNo;
+			if (remainingLeaves > 0.0)
+			{
+                var leafAppearanceRate = culms.getLeafAppearanceRate(remainingLeaves);
 
-			culm.AddNewLeaf(dltLeafNo);
+                // If leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves
+				// is calculated from thermal time for the day.
+                dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, remainingLeaves);
+                culm.AddNewLeaf(dltLeafNo);
+            }
 
 			return dltLeafNo;
 		}
@@ -270,8 +283,14 @@ namespace Models.PMF.Struct
 		/// <summary> calculate the potential leaf area</summary>
 		public double CalcPotentialLeafArea()
         {
-			if (beforeFlowering())
-				return areaCalc.Value();
+            // Classic Change: if (stage > emergence)// && stage <= flag)
+            // NextGen change: if (beforeFlowering())
+            if (AfterEmergence())            
+			{
+                // Classic change added density as a param. Looks like Density is already available 
+				// from the leaf in the area calcs.
+                return areaCalc.Value();
+			}
 			return 0.0;
 		}
 

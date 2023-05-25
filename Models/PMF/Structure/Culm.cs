@@ -51,15 +51,15 @@ namespace Models.PMF.Struct
 		/// <summary>Calculated potential sizes for each leaf</summary>
 		public List<double> LeafSizes { get; set; }
 
-		// public Methods -------------------------------------------------------
+        // public Methods -------------------------------------------------------
 
-		/// <summary>Constructor. </summary>
-		/// <param name="leafAppearance"></param>
-		public Culm(double leafAppearance)
+        /// <summary>Constructor. </summary>
+        /// <param name="culmNo"></param>
+        public Culm(int culmNo)
 		{
-			LeafNoAtAppearance = leafAppearance;
 			Initialize();
-		}
+            CulmNo = culmNo;
+        }
 
 		/// <summary> Potential Leaf sizes can be calculated early and then referenced</summary>
 		public void UpdatePotentialLeafSizes(ICulmLeafArea areaCalc)
